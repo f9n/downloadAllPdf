@@ -22,6 +22,17 @@ function Main(domain, url) {
         Links.push({title: title, href: href});
       });
     }
+    //console.log(Links);
+    console.log('[+] Clean Up the links');
+    var lastSlashIndex, niceLink, value;
+    for(let link of Links) {
+      lastSlashIndex = link.href.lastIndexOf('/');
+      niceLink = link.href.substr(0, lastSlashIndex)
+      link.href = niceLink;
+      lastSlashIndex = link.href.lastIndexOf('/');
+      value = link.href.substr(lastSlashIndex);
+      link.href = link.href + value + '_tutorial.pdf';
+    }
     console.log(Links);
   });
 }
