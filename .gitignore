@@ -1,3 +1,6 @@
+# Pdfs
+*.pdf
+
 # Logs
 logs
 *.log
