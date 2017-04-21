@@ -1,5 +1,6 @@
 const request = require('request');
 const cheerio = require('cheerio');
+const fs = require('fs');
 
 console.log("[+] Program Starting");
 
@@ -33,8 +34,18 @@ function Main(domain, url) {
       value = link.href.substr(lastSlashIndex);
       link.href = link.href + value + '_tutorial.pdf';
     }
-    console.log(Links);
+    //console.log(Links);
+    console.log('[+] Downloading Pdfs')
+    console.log(Links[0])
+    downloadFile(Links[0].href)
   });
+}
+
+function downloadFile(link) {
+    console.log(link);
+    console.log(link.split("/"));
+    console.log(link.split("/").pop());
+    request(link).pipe(fs.createWriteStream(link.split("/").pop()))
 }
 
 Main(domain, url);
