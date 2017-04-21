@@ -37,15 +37,31 @@ function Main(domain, url) {
     //console.log(Links);
     console.log('[+] Downloading Pdfs')
     console.log(Links[0])
-    downloadFile(Links[0].href)
+    //downloadFile(Links[0].href)
+    //downloadFiles(Links);
+    downloadFilesWithSetInterval(Links);
   });
 }
 
 function downloadFile(link) {
     console.log(link);
-    console.log(link.split("/"));
-    console.log(link.split("/").pop());
+    //console.log(link.split("/"));
+    //console.log(link.split("/").pop());
     request(link).pipe(fs.createWriteStream(link.split("/").pop()))
+}
+function downloadFiles(links) {
+    for(let link of links) {
+        downloadFile(link.href);
+    }
+}
+
+function downloadFilesWithSetInterval(links) {
+  var i = 0;
+  setInterval(function() {
+    console.log('i: ', i , " link: ", links[i].href);
+    downloadFile(links[i].href);
+    i++;
+  }, 8000 );
 }
 
 Main(domain, url);
