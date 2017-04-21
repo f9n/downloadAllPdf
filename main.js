@@ -3,6 +3,7 @@ const cheerio = require('cheerio');
 
 console.log("[+] Program Starting");
 
+const domain = "https://www.tutorialspoint.com";
 const url = "https://www.tutorialspoint.com/tutorialslibrary.htm"
 
 request(url, (error, response, html) => {
@@ -15,6 +16,7 @@ request(url, (error, response, html) => {
       a = data.children().first();
       title = a.attr('title');
       href = a.attr('href');
+      href = domain + href;
       Links.push({title: title, href: href});
     });
   }
