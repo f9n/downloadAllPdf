@@ -5,6 +5,7 @@ const fs      = require('fs');
 const figlet  = require('figlet');
 const shell   = require('shelljs');
 const CFonts  = require('cfonts');
+const logSymbols = require('log-symbols');
 
 const prettyFont = CFonts.render('All|Pdfs!', {
   font: '3d',        //define the font face
@@ -27,14 +28,14 @@ console.log(
 );
 */
 
-console.log(chalk.blue("[+] Program Starting"));
+console.log(chalk.blue(`${logSymbols.info} Program Starting`));
 
 const domain = "https://www.tutorialspoint.com";
 const url = "https://www.tutorialspoint.com/tutorialslibrary.htm"
 
 function Main(domain, url) {
   let Links = [];
-  console.log(chalk.blue('[+] Scraping TutorialsPoint'))
+  console.log(chalk.blue(`${logSymbols.info} Scraping TutorialsPoint`))
   request(url, (error, response, html) => {
     if(!error){
       const $ = cheerio.load(html);
@@ -48,8 +49,8 @@ function Main(domain, url) {
         Links.push({title: title, href: href});
       });
     }
-    //console.log(Links);
-    console.log(chalk.blue('[+] Clean Up the links'));
+    console.log(chalk.blue(`${logSymbols.success} Finished Scraping!`));
+    console.log(chalk.blue(`${logSymbols.info} Clean Up the links`));
     var lastSlashIndex, niceLink, value;
     for(let link of Links) {
       lastSlashIndex = link.href.lastIndexOf('/');
@@ -60,7 +61,7 @@ function Main(domain, url) {
       link.href = link.href + value + '_tutorial.pdf';
     }
     //console.log(Links);
-    console.log(chalk.blue('[+] Downloading Pdfs...'))
+    console.log(chalk.yellow(`${logSymbols.warning} Downloading Pdfs...`))
     //downloadFile(Links[0].href)
     //downloadFiles(Links);
     downloadFilesWithSetInterval(Links);
@@ -83,7 +84,7 @@ function downloadFilesWithSetInterval(links) {
   var i = 0;
   setInterval(function() {
     downloadFile(links[i].href);
-    console.log(chalk.green('+ Downloaded  Title: ' + links[i].title + ' Link:' + links[i].href))
+    console.log(logSymbols.success + chalk.green(` Downloaded  Title: ${chalk.red(links[i].title)} Link: ${links[i].href}`))
     i++;
   }, 8000 );
 }
