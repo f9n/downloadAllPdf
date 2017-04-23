@@ -2,6 +2,15 @@ const request = require('request');
 const cheerio = require('cheerio');
 const chalk   = require('chalk');
 const fs      = require('fs');
+const figlet  = require('figlet');
+const shell = require('shelljs');
+
+shell.exec('clear');
+console.log(
+  chalk.yellow(
+    figlet.textSync('All Pdfs', { horizontalLayout: 'full' })
+  )
+);
 
 console.log(chalk.blue("[+] Program Starting"));
 
