@@ -1,15 +1,16 @@
 const request = require('request');
 const cheerio = require('cheerio');
-const fs = require('fs');
+const chalk   = require('chalk');
+const fs      = require('fs');
 
-console.log("[+] Program Starting");
+console.log(chalk.blue("[+] Program Starting"));
 
 const domain = "https://www.tutorialspoint.com";
 const url = "https://www.tutorialspoint.com/tutorialslibrary.htm"
 
 function Main(domain, url) {
   let Links = [];
-  console.log('[+] Scraping TutorialsPoint')
+  console.log(chalk.blue('[+] Scraping TutorialsPoint'))
   request(url, (error, response, html) => {
     if(!error){
       const $ = cheerio.load(html);
@@ -24,7 +25,7 @@ function Main(domain, url) {
       });
     }
     //console.log(Links);
-    console.log('[+] Clean Up the links');
+    console.log(chalk.blue('[+] Clean Up the links'));
     var lastSlashIndex, niceLink, value;
     for(let link of Links) {
       lastSlashIndex = link.href.lastIndexOf('/');
@@ -35,8 +36,7 @@ function Main(domain, url) {
       link.href = link.href + value + '_tutorial.pdf';
     }
     //console.log(Links);
-    console.log('[+] Downloading Pdfs')
-    console.log(Links[0])
+    console.log(chalk.blue('[+] Downloading Pdfs...'))
     //downloadFile(Links[0].href)
     //downloadFiles(Links);
     downloadFilesWithSetInterval(Links);
@@ -44,7 +44,7 @@ function Main(domain, url) {
 }
 
 function downloadFile(link) {
-    console.log(link);
+    //console.log(link);
     //console.log(link.split("/"));
     //console.log(link.split("/").pop());
     request(link).pipe(fs.createWriteStream(link.split("/").pop()))
@@ -58,8 +58,8 @@ function downloadFiles(links) {
 function downloadFilesWithSetInterval(links) {
   var i = 0;
   setInterval(function() {
-    console.log('i: ', i , " link: ", links[i].href);
     downloadFile(links[i].href);
+    console.log(chalk.green('+ Downloaded  Title: ' + links[i].title + ' Link:' + links[i].href))
     i++;
   }, 8000 );
 }

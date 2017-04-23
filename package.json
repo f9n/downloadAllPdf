@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/pleycpl/downloadAllPdf/issues"
   },
-  "homepage": "https://github.com/pleycpl/downloadAllPdf#readme"
+  "homepage": "https://github.com/pleycpl/downloadAllPdf#readme",
+  "dependencies": {
+    "chalk": "^1.1.3"
+  }
 }
