@@ -72,7 +72,14 @@ function downloadFile(link) {
     //console.log(link);
     //console.log(link.split("/"));
     //console.log(link.split("/").pop());
-    request(link).pipe(fs.createWriteStream(link.split("/").pop()))
+    console.log(logSymbols.success + chalk.green(` Downloaded  Title: ${chalk.red(link.title)} Link: ${link.href}`))
+    intervalId = setInterval(function() { process.stdout.write('.'); }, 1000);
+    request(link.href)
+      .pipe(fs.createWriteStream(link.href.split("/").pop()))
+      .on('close', function(err) {
+        process.stdout.write('done!\n');
+        clearInterval(intervalId);
+      });
 }
 function downloadFiles(links) {
     for(let link of links) {
@@ -83,8 +90,7 @@ function downloadFiles(links) {
 function downloadFilesWithSetInterval(links) {
   var i = 0;
   setInterval(function() {
-    downloadFile(links[i].href);
-    console.log(logSymbols.success + chalk.green(` Downloaded  Title: ${chalk.red(links[i].title)} Link: ${links[i].href}`))
+    downloadFile(links[i]);
     i++;
   }, 8000 );
 }
