@@ -82,7 +82,10 @@ function downloadFile(link) {
   request
     .get(link.href)
     .on('response', function(resp) {
-      //console.log(resp.statusCode);
+      console.log(typeof(resp.statusCode));
+      if(resp.statusCode == 404) {
+        console.log("Link is 404 Title:" + link.title + " Link:" + link.href);
+      }
       //console.log(resp.headers["content-type"]);
     })
     .on('data', function(chunk) {
