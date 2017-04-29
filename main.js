@@ -51,7 +51,11 @@ function CrawlingAndDownloading(domain, url, time) {
         title = a.attr('title');
         href = a.attr('href');
         href = domain + href;
-        Links.push({title: title, href: href});
+        if(title != undefined) {
+          Links.push({title: title, href: href});
+        } else {
+          //console.log("Links Length: " + Links.length + " Title: " + title + " Href: " + href);
+        }
       });
     }
     console.log(chalk.blue(`${logSymbols.success} Finished Scraping!`));
