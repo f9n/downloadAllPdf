@@ -2,7 +2,7 @@ const request = require('request');
 const cheerio = require('cheerio');
 const chalk   = require('chalk');
 const fs      = require('fs');
-//const figlet  = require('figlet');
+const figlet  = require('figlet');
 const shell   = require('shelljs');
 const CFonts  = require('cfonts');
 const logSymbols = require('log-symbols');
@@ -20,25 +20,25 @@ const prettyFont = CFonts.render('All|Pdfs!', {
     space: true,          //define if the output text should have empty lines on top and on the bottom
     maxLength: '0'        //define how many character can be on one line
 });
-
-shell.exec('clear');
-console.log(prettyFont.string)
-/*
-console.log(
-  chalk.yellow(
+const figletFont = chalk.yellow(
     figlet.textSync('All Pdfs', { horizontalLayout: 'full' })
-  )
 );
-*/
 
-console.log(chalk.blue(`${logSymbols.info} Program Starting`));
+function Main() {
+  shell.exec('clear');
+  console.log(prettyFont.string)
+  //console.log(figletFont);
+  console.log(chalk.blue(`${logSymbols.info} Program Starting`));
 
+  const domain = "https://www.tutorialspoint.com";
+  const url = "https://www.tutorialspoint.com/tutorialslibrary.htm"
+  const time = process.argv[2] || 8000;
 
-const domain = "https://www.tutorialspoint.com";
-const url = "https://www.tutorialspoint.com/tutorialslibrary.htm"
-const time = process.argv[2]
+  CrawlingAndDownloading(domain, url, time);
+}
 
-function Main(domain, url, time) {
+/* All Functions */
+function CrawlingAndDownloading(domain, url, time) {
   let Links = [];
   console.log(chalk.blue(`${logSymbols.info} Scraping TutorialsPoint`))
   request(url, (error, response, html) => {
@@ -127,5 +127,8 @@ function downloadFilesSync(links) {
 }
 */
 
-Main(domain, url, time);
+/* Python style */
+if(require.main == module) {
+  Main();
+}
 
