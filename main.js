@@ -30,15 +30,16 @@ function Main() {
   //console.log(figletFont);
   console.log(chalk.blue(`${logSymbols.info} Program Starting`));
 
-  const domain = "https://www.tutorialspoint.com";
-  const url = "https://www.tutorialspoint.com/tutorialslibrary.htm"
-  const time = process.argv[2] || 8000;
+  const domain  = "https://www.tutorialspoint.com";
+  const url     = "https://www.tutorialspoint.com/tutorialslibrary.htm"
+  const time    = parseInt(process.argv[2]) || 8000;
+  var   index   = parseInt(process.argv[3]) || 0;
 
-  CrawlingAndDownloading(domain, url, time);
+  CrawlingAndDownloading(domain, url, time, index);
 }
 
 /* All Functions */
-function CrawlingAndDownloading(domain, url, time) {
+function CrawlingAndDownloading(domain, url, time, index) {
   let Links = [];
   console.log(chalk.blue(`${logSymbols.info} Scraping TutorialsPoint`))
   request(url, (error, response, html) => {
@@ -72,7 +73,7 @@ function CrawlingAndDownloading(domain, url, time) {
     //console.log(Links);
     console.log(chalk.yellow(`${logSymbols.warning} Downloading Pdfs...`))
     //downloadFiles(Links);
-    downloadFilesWithSetInterval(Links, time);
+    downloadFilesWithSetInterval(Links, time, index);
   });
 }
 
@@ -92,21 +93,33 @@ function downloadFile(link) {
     });
 }
 
-function downloadFilesWithSetInterval(links, time) {
-  var i = 0;
+function downloadFilesWithSetInterval(links, time, index) {
+  const staticIndex = index;
   var j = 0;
   eventEmitter.on('downloading', function(link) {
-    i++;
-    console.log(chalk.cyan(`[All]: ${links.length} [Downloading]: ${i}  [Downloaded]: ${j} `) +
+    index++;
+    console.log(chalk.cyan(`[All]: ${links.length} [Downloading]: ${index}  [Downloaded]: ${j} `) +
       logSymbols.warning + chalk.yellow(` Downloading  Title: ${chalk.red(link.title)} Link: ${link.href}`))
   })
   eventEmitter.on('downloaded', function(link) {
     j++;
-    console.log(chalk.cyan(`[All]: ${links.length} [Downloading]: ${i}  [Downloaded]: ${j} `) +
+    console.log(chalk.cyan(`[All]: ${links.length} [Downloading]: ${index}  [Downloaded]: ${j} `) +
       logSymbols.success + chalk.green(` Downloaded   Title: ${chalk.red(link.title)} Link: ${link.href}`));
   })
   setInterval(function() {
-    downloadFile(links[i]);
+    if(index != links.length) {
+      downloadFile(links[index]);
+    } else {
+      console.log(chalk.blue(`${logSymbols.info} Program Ended and Waiting...`));
+      //console.log("Links.length :" + links.length + " type:" + typeof(links.length));
+      //console.log("Index: " + staticIndex + " type:" + typeof(staticIndex))
+      //console.log("J: " + j + " type:" + typeof(j));
+      //console.log(links.length - staticIndex);
+      if(links.length - staticIndex == j) {
+        console.log("Ended!!!");
+        process.exit(0);
+      }
+    }
   }, time );
 }
 
