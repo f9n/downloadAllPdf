@@ -36,8 +36,9 @@ console.log(chalk.blue(`${logSymbols.info} Program Starting`));
 
 const domain = "https://www.tutorialspoint.com";
 const url = "https://www.tutorialspoint.com/tutorialslibrary.htm"
+const time = process.argv[2]
 
-function Main(domain, url) {
+function Main(domain, url, time) {
   let Links = [];
   console.log(chalk.blue(`${logSymbols.info} Scraping TutorialsPoint`))
   request(url, (error, response, html) => {
@@ -67,7 +68,7 @@ function Main(domain, url) {
     //console.log(Links);
     console.log(chalk.yellow(`${logSymbols.warning} Downloading Pdfs...`))
     //downloadFiles(Links);
-    downloadFilesWithSetInterval(Links);
+    downloadFilesWithSetInterval(Links, time);
   });
 }
 
@@ -87,7 +88,7 @@ function downloadFile(link) {
     });
 }
 
-function downloadFilesWithSetInterval(links) {
+function downloadFilesWithSetInterval(links, time) {
   var i = 0;
   var j = 0;
   eventEmitter.on('downloading', function(link) {
@@ -102,7 +103,7 @@ function downloadFilesWithSetInterval(links) {
   })
   setInterval(function() {
     downloadFile(links[i]);
-  }, 8000 );
+  }, time );
 }
 
 
@@ -126,5 +127,5 @@ function downloadFilesSync(links) {
 }
 */
 
-Main(domain, url);
+Main(domain, url, time);
 
