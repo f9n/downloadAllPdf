@@ -35,8 +35,50 @@ function Main() {
   const time    = parseInt(process.argv[2]) || 8000;
   var   index   = parseInt(process.argv[3]) || 0;
 
-  CrawlingAndDownloading(domain, url, time, index);
+  eventEmitter.emit("scraping", domain, url, time, index); // with events
+  //CrawlingAndDownloading(domain, url, time, index); with function
 }
+
+/* All events */
+eventEmitter.on('scraping', (domain, url, time, index) => {
+  let Links = [];
+  console.log(chalk.blue(`${logSymbols.info} Scraping TutorialsPoint`))
+  request(url, (error, response, html) => {
+    if(!error) {
+      const $ = cheerio.load(html);
+      var a, title, href, data;
+      $('ul.menu li').each(function(){
+        data = $(this);
+        a = data.children().first();
+        title = a.attr('title');
+        href = a.attr('href');
+        href = domain + href;
+        if(title != undefined) {
+          Links.push({title: title, href: href});
+        } else {
+          //console.log("Links Length: " + Links.length + " Title: " + title + " Href: " + href);
+        }
+      });
+    }
+    console.log(chalk.blue(`${logSymbols.success} Finished Scraping!`));
+    eventEmitter.emit("cleanup", Links);
+    //downloadFilesWithSetInterval(Links, time, index);
+  })
+})
+
+eventEmitter.on('cleanup', (Links) => {
+  console.log(chalk.blue(`${logSymbols.info} Clean Up the links`));
+  var lastSlashIndex, niceLink, value;
+  for(let link of Links) {
+    lastSlashIndex = link.href.lastIndexOf('/');
+    niceLink = link.href.substr(0, lastSlashIndex)
+    link.href = niceLink;
+    lastSlashIndex = link.href.lastIndexOf('/');
+    value = link.href.substr(lastSlashIndex);
+    link.href = link.href + value + '_tutorial.pdf';
+  }
+})
+
 
 /* All Functions */
 function CrawlingAndDownloading(domain, url, time, index) {
